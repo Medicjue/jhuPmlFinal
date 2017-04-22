@@ -33,33 +33,34 @@ valid <- trainData[-inTrain, ]
 
 
 control <- trainControl(method = "cv", number = 5)
-fit_rpart <- train(classe ~ ., data = train, method = "rpart", 
+fitRpart <- train(classe ~ ., data = train, method = "rpart", 
                    trControl = control)
-print(fit_rpart, digits = 4)
+print(fitRpart, digits = 4)
 
 # predict outcomes using validation set
-predict_rpart <- predict(fit_rpart, valid)
+predictRpart <- predict(fitRpart, valid)
 
 
-fancyRpartPlot(fit_rpart$finalModel)
+fancyRpartPlot(fitRpart$finalModel)
 
 # Show prediction result
-(conf_rpart <- confusionMatrix(valid$classe, predict_rpart))
+confRpart <- confusionMatrix(valid$classe, predict_rpart)
 ## Confusion Matrix and Statistics
 
 
-(accuracy_rpart <- conf_rpart$overall[1])
+accuracyRpart <- confRpart$overall[1]
 
-fit_rf <- train(classe ~ ., data = train, method = "rf", 
-                trControl = control)
-print(fit_rf, digits = 4)
+
+##### Using Random Forest... #####
+fitRf <- train(classe ~ ., data = train, method = "rf", trControl = control)
+print(fitRf, digits = 4)
 
 # predict outcomes using validation set
-predict_rf <- predict(fit_rf, valid)
+predictRf <- predict(fitRf, valid)
 # Show prediction result
-(conf_rf <- confusionMatrix(valid$classe, predict_rf))
+confRf <- confusionMatrix(valid$classe, predictRf)
 
+accuracyRf <- confRf$overall[1]
 
-(accuracy_rf <- conf_rf$overall[1])
-
-(predict(fit_rf, testData))
+predict(fitRf, testData)
+## Result: B A B A A E D B A A B C B A E E A B B B

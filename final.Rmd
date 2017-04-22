@@ -44,23 +44,25 @@ valid <- trainData[-inTrain, ]
 
 Use RandomForests to Predict
 ```{r}
+fitRf <- train(classe ~ ., data = train, method = "rf", trControl = control)
+print(fitRf, digits = 4)
 # predict outcomes using validation set
-predict_rf <- predict(fit_rf, valid)
+predictRf <- predict(fitRf, valid)
 # Show prediction result
-(conf_rf <- confusionMatrix(valid$classe, predict_rf))
+confRf <- confusionMatrix(valid$classe, predictRf)
 
 
-(accuracy_rf <- conf_rf$overall[1])
+accuracyRf <- confRf$overall[1]
 ```
 The performance is
-> (accuracy_rf <- conf_rf$overall[1])
+> accuracyRf <- confRf$overall[1]
  Accuracy 
 0.9940527 
 
 Then we use the algorithm to predict for quiz
 ```{r}
-(predict(fit_rf, testData))
+predict(fitRf, testData)
 ```
-> (predict(fit_rf, testData))
+> predict(fitRf, testData)
  [1] B A B A A E D B A A B C B A E E A B B B
 Levels: A B C D E
