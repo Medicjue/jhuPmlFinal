@@ -1,0 +1,66 @@
+--------------------------------------------------------------------------------
+  Johns Hopkins University - Practical Machine Learning Final
+--------------------------------------------------------------------------------
+
+Preparation
+```{r}
+packages <- c("caret", "rattle", "rpart", "rpart.plot", "randomForest", 
+              "repmis", "e1071")
+
+## Install Necessary Library
+# for(package in packages) {
+#   install.packages(package)
+# }
+
+## Load Library
+for(package in packages) {
+  library(package, character.only = T)
+}
+```
+
+
+Loading Data from Local
+```{r}
+training <- read.csv("pml-training.csv", na.strings = c("NA", ""))
+testing <- read.csv("pml-testing.csv", na.strings = c("NA", ""))
+```
+
+Data Cleansing
+```{r}
+training <- training[, colSums(is.na(training)) == 0]
+testing <- testing[, colSums(is.na(testing)) == 0]
+
+trainData <- training[, -c(1:7)]
+testData <- testing[, -c(1:7)]
+```
+
+```{r}
+set.seed(7826) 
+inTrain <- createDataPartition(trainData$classe, p = 0.7, list = FALSE)
+train <- trainData[inTrain, ]
+valid <- trainData[-inTrain, ]
+```
+
+
+Use RandomForests to Predict
+```{r}
+# predict outcomes using validation set
+predict_rf <- predict(fit_rf, valid)
+# Show prediction result
+(conf_rf <- confusionMatrix(valid$classe, predict_rf))
+
+
+(accuracy_rf <- conf_rf$overall[1])
+```
+The performance is
+> (accuracy_rf <- conf_rf$overall[1])
+ Accuracy 
+0.9940527 
+
+Then we use the algorithm to predict for quiz
+```{r}
+(predict(fit_rf, testData))
+```
+> (predict(fit_rf, testData))
+ [1] B A B A A E D B A A B C B A E E A B B B
+Levels: A B C D E
